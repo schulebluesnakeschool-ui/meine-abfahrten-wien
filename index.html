@@ -26,6 +26,24 @@
         color: #000;
         font-weight: 600;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+    .departures {
+        background: white;
+        padding: 20px;
+        border-radius: 14px;
+        margin-top: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .line {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    .time {
+        font-size: 18px;
+        color: #444;
+        margin-bottom: 12px;
     }
 </style>
 </head>
@@ -33,21 +51,55 @@
 
 <h1>🚏 Meine Abfahrten Wien</h1>
 
-<a class="stop-button" href="https://www.google.com/maps/search/U6+Thaliastraße" target="_blank">
-    U6 Thaliastraße → beide Richtungen
-</a>
+<div class="stop-button" onclick="loadStop('U6 Thaliastraße')">U6 Thaliastraße</div>
+<div class="stop-button" onclick="loadStop('U3 Stephansplatz')">U3 Stephansplatz</div>
+<div class="stop-button" onclick="loadStop('13A Strozzigasse')">13A Strozzigasse</div>
+<div class="stop-button" onclick="loadStop('46 Schottenfeldgasse')">46 Schottenfeldgasse</div>
 
-<a class="stop-button" href="https://www.google.com/maps/search/U3+Stephansplatz" target="_blank">
-    U3 Stephansplatz → beide Richtungen
-</a>
+<div id="output" class="departures" style="display:none;"></div>
 
-<a class="stop-button" href="https://www.google.com/maps/search/13A+Strozzigasse" target="_blank">
-    13A Strozzigasse → beide Richtungen
-</a>
+<script>
+async function loadStop(name) {
+    const url = "https://corsproxy.io/?" + encodeURIComponent(
+        "https://www.google.com/async/places/query?authuser=0&hl=de&gl=at&q=" + encodeURIComponent(name)
+    );
 
-<a class="stop-button" href="https://www.google.com/maps/search/46+Schottenfeldgasse" target="_blank">
-    46 Schottenfeldgasse → beide Richtungen
-</a>
+    const out = document.getElementById("output");
+    out.style.display = "block";
+    out.innerHTML = "<h2>Abfahrten werden geladen…</h2>";
+
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+
+        // Google liefert kein reines JSON, sondern eingebettete Daten → wir extrahieren sie
+        const matches = text.match(/"transit_departures":(
+
+\[.*?\]
+
+)/);
+
+        if (!matches) {
+            out.innerHTML = "<p>Keine Abfahrten gefunden</p>";
+            return;
+        }
+
+        const departures = JSON.parse(matches[1]);
+
+        out.innerHTML = "<h2>Abfahrten für " + name + "</h2>";
+
+        departures.forEach(dep => {
+            out.innerHTML += `
+                <div class="line">${dep.line} → ${dep.destination}</div>
+                <div class="time">${dep.countdown} Minuten</div>
+            `;
+        });
+
+    } catch (e) {
+        out.innerHTML = "<p>Fehler beim Laden der Daten</p>";
+    }
+}
+</script>
 
 </body>
 </html>
