@@ -26,16 +26,6 @@
         color: #000;
         font-weight: 600;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        cursor: pointer;
-    }
-    iframe {
-        width: 100%;
-        height: 70vh;
-        border: none;
-        border-radius: 14px;
-        margin-top: 20px;
-        background: white;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 </style>
 </head>
@@ -43,26 +33,37 @@
 
 <h1>🚏 Meine Abfahrten Wien</h1>
 
-<div class="stop-button" onclick="show(60202024)">U6 Thaliastraße → Siebenhirten</div>
-<div class="stop-button" onclick="show(60202023)">U6 Thaliastraße → Floridsdorf</div>
+<a class="stop-button" href="https://www.wienerlinien.at/ogd_realtime/monitor?stopId=60202024" target="_blank">
+    U6 Thaliastraße → Siebenhirten
+</a>
 
-<div class="stop-button" onclick="show(60200301)">U3 Stephansplatz → Simmering</div>
-<div class="stop-button" onclick="show(60200302)">U3 Stephansplatz → Ottakring</div>
+<a class="stop-button" href="https://www.wienerlinien.at/ogd_realtime/monitor?stopId=60202023" target="_blank">
+    U6 Thaliastraße → Floridsdorf
+</a>
 
-<div class="stop-button" onclick="show(60201313)">13A Strozzigasse → Hauptbahnhof</div>
-<div class="stop-button" onclick="show(60201312)">13A Strozzigasse → Alser Straße</div>
+<a class="stop-button" href="https://www.wienerlinien.at/ogd_realtime/monitor?stopId=60200301" target="_blank">
+    U3 Stephansplatz → Simmering
+</a>
 
-<div class="stop-button" onclick="show(60204603)">46 Schottenfeldgasse → Joachimsthalerplatz</div>
-<div class="stop-button" onclick="show(60204604)">46 Schottenfeldgasse → Volkstheater</div>
+<a class="stop-button" href="https://www.wienerlinien.at/ogd_realtime/monitor?stopId=60200302" target="_blank">
+    U3 Stephansplatz → Ottakring
+</a>
 
-<iframe id="frame" src=""></iframe>
+<a class="stop-button" href="https://www.wienerlinien.at/ogd_realtime/monitor?stopId=60201313" target="_blank">
+    13A Strozzigasse → Hauptbahnhof
+</a>
 
-<script>
-function show(id) {
-    document.getElementById("frame").src =
-        "https://www.wienerlinien.at/ogd_realtime/monitor?stopId=" + id;
-}
-</script>
+<a class="stop-button" href="https://www.wienerlinien.at/ogd_realtime/monitor?stopId=60201312" target="_blank">
+    13A Strozzigasse → Alser Straße
+</a>
+
+<a class="stop-button" href="https://www.wienerlinien.at/ogd_realtime/monitor?stopId=60204603" target="_blank">
+    46 Schottenfeldgasse → Joachimsthalerplatz
+</a>
+
+<a class="stop-button" href="https://www.wienerlinien.at/ogd_realtime/monitor?stopId=60204604" target="_blank">
+    46 Schottenfeldgasse → Volkstheater
+</a>
 
 </body>
 </html>
