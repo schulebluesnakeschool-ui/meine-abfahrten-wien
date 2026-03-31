@@ -67,8 +67,8 @@
 
 <script>
 function loadStop(id) {
-    const url = "https://api.allorigins.win/raw?url=" +
-        encodeURIComponent("https://www.wienerlinien.at/ogd_realtime/monitor?stopId=" + id);
+    const api = "https://www.wienerlinien.at/ogd_realtime/monitor?stopId=" + id;
+    const url = "https://corsproxy.io/?" + encodeURIComponent(api);
 
     fetch(url)
         .then(r => r.json())
@@ -93,7 +93,7 @@ function loadStop(id) {
                 });
             });
         })
-        .catch(() => {
+        .catch(err => {
             document.getElementById("output").innerHTML =
                 "<p>Fehler beim Laden der Daten</p>";
         });
