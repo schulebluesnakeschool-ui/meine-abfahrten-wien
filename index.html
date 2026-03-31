@@ -28,22 +28,14 @@
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         cursor: pointer;
     }
-    .departures {
-        background: white;
-        padding: 20px;
+    iframe {
+        width: 100%;
+        height: 70vh;
+        border: none;
         border-radius: 14px;
         margin-top: 20px;
+        background: white;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .line {
-        font-size: 22px;
-        font-weight: bold;
-        margin-bottom: 6px;
-    }
-    .time {
-        font-size: 18px;
-        color: #444;
-        margin-bottom: 12px;
     }
 </style>
 </head>
@@ -51,52 +43,24 @@
 
 <h1>🚏 Meine Abfahrten Wien</h1>
 
-<div class="stop-button" onclick="loadStop(60202024)">U6 Thaliastraße → Siebenhirten</div>
-<div class="stop-button" onclick="loadStop(60202023)">U6 Thaliastraße → Floridsdorf</div>
+<div class="stop-button" onclick="show(60202024)">U6 Thaliastraße → Siebenhirten</div>
+<div class="stop-button" onclick="show(60202023)">U6 Thaliastraße → Floridsdorf</div>
 
-<div class="stop-button" onclick="loadStop(60200301)">U3 Stephansplatz → Simmering</div>
-<div class="stop-button" onclick="loadStop(60200302)">U3 Stephansplatz → Ottakring</div>
+<div class="stop-button" onclick="show(60200301)">U3 Stephansplatz → Simmering</div>
+<div class="stop-button" onclick="show(60200302)">U3 Stephansplatz → Ottakring</div>
 
-<div class="stop-button" onclick="loadStop(60201313)">13A Strozzigasse → Hauptbahnhof</div>
-<div class="stop-button" onclick="loadStop(60201312)">13A Strozzigasse → Alser Straße</div>
+<div class="stop-button" onclick="show(60201313)">13A Strozzigasse → Hauptbahnhof</div>
+<div class="stop-button" onclick="show(60201312)">13A Strozzigasse → Alser Straße</div>
 
-<div class="stop-button" onclick="loadStop(60204603)">46 Schottenfeldgasse → Joachimsthalerplatz</div>
-<div class="stop-button" onclick="loadStop(60204604)">46 Schottenfeldgasse → Volkstheater</div>
+<div class="stop-button" onclick="show(60204603)">46 Schottenfeldgasse → Joachimsthalerplatz</div>
+<div class="stop-button" onclick="show(60204604)">46 Schottenfeldgasse → Volkstheater</div>
 
-<div id="output" class="departures" style="display:none;"></div>
+<iframe id="frame" src=""></iframe>
 
 <script>
-function loadStop(id) {
-    const api = "https://www.wienerlinien.at/ogd_realtime/monitor?stopId=" + id;
-    const url = "https://corsproxy.io/?" + encodeURIComponent(api);
-
-    fetch(url)
-        .then(r => r.json())
-        .then(data => {
-            const out = document.getElementById("output");
-            out.style.display = "block";
-            out.innerHTML = "<h2>Abfahrten</h2>";
-
-            const monitors = data.data.monitors;
-            if (!monitors.length) {
-                out.innerHTML += "<p>Keine Abfahrten (Umleitung oder Störung)</p>";
-                return;
-            }
-
-            monitors.forEach(m => {
-                m.lines.forEach(line => {
-                    const dep = line.departures.departure[0].departureTime.countdown;
-                    out.innerHTML += `
-                        <div class="line">🚆 ${line.name} → ${line.towards}</div>
-                        <div class="time">In ${dep} Minuten</div>
-                    `;
-                });
-            });
-        })
-        .catch(err => {
-            document.getElementById("output").innerHTML =
-                "<p>Fehler beim Laden der Daten</p>";
-        });
+function show(id) {
+    document.getElementById("frame").src =
+        "https://www.wienerlinien.at/ogd_realtime/monitor?stopId=" + id;
 }
 </script>
 
