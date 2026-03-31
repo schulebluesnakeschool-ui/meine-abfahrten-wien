@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Meine Abfahrten Wien</title>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #f2f2f7;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+    }
+    .stop-button {
+        display: block;
+        background: white;
+        padding: 18px;
+        margin: 12px 0;
+        border-radius: 14px;
+        font-size: 20px;
+        text-decoration: none;
+        color: #000;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+    .departures {
+        background: white;
+        padding: 20px;
+        border-radius: 14px;
+        margin-top: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .line {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .time {
+        font-size: 18px;
+        color: #444;
+        margin-bottom: 12px;
+    }
+</style>
+</head>
+<body>
+
+<h1>🚏 Meine Abfahrten Wien</h1>
+
+<div class="stop-button" onclick="loadStop(60202024)">U6 Thaliastraße → Siebenhirten</div>
+<div class="stop-button" onclick="loadStop(60202023)">U6 Thaliastraße → Floridsdorf</div>
+
+<div class="stop-button" onclick="loadStop(60200301)">U3 Stephansplatz → Simmering</div>
+<div class="stop-button" onclick="loadStop(60200302)">U3 Stephansplatz → Ottakring</div>
+
+<div class="stop-button" onclick="loadStop(60201313)">13A Strozzigasse → Hauptbahnhof</div>
+<div class="stop-button" onclick="loadStop(60201312)">13A Strozzigasse → Alser Straße</div>
+
+<div class="stop-button" onclick="loadStop(60204603)">46 Schottenfeldgasse → Joachimsthalerplatz</div>
+<div class="stop-button" onclick="loadStop(60204604)">46 Schottenfeldgasse → Volkstheater</div>
+
+<div id="output" class="departures" style="display:none;"></div>
+
+<script>
+function loadStop(id) {
+    const url = "https://api.allorigins.win/raw?url=" +
+        encodeURIComponent("https://www.wienerlinien.at/ogd_realtime/monitor?stopId=" + id);
+
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            const out = document.getElementById("output");
+            out.style.display = "block";
+            out.innerHTML = "<h2>Abfahrten</h2>";
+
+            const monitors = data.data.monitors;
+            if (!monitors.length) {
+                out.innerHTML += "<p>Keine Abfahrten (Umleitung oder Störung)</p>";
+                return;
+            }
+
+            monitors.forEach(m => {
+                m.lines.forEach(line => {
+                    const dep = line.departures.departure[0].departureTime.countdown;
+                    out.innerHTML += `
+                        <div class="line">🚆 ${line.name} → ${line.towards}</div>
+                        <div class="time">In ${dep} Minuten</div>
+                    `;
+                });
+            });
+        })
+        .catch(() => {
+            document.getElementById("output").innerHTML =
+                "<p>Fehler beim Laden der Daten</p>";
+        });
+}
+</script>
+
+</body>
+</html>
